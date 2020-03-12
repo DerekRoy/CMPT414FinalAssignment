@@ -6,6 +6,7 @@ class convolution_layer:
     def __init__(self, num_filters, kernel_size, testing):
         # Gaussian -1 to 1 initiaized filters
         self.filters = np.random.normal(size=(num_filters,kernel_size,kernel_size)) 
+        self.bias = 0 # initializa bias to 0
         
         if testing: 
             #      Section for testing 0 and 90 sobel filters      # 3x3
@@ -29,6 +30,14 @@ class convolution_layer:
     # Set the filters in layer to new filters given
     def set_filters(new_filters):
         self.filters = new_filters
+        
+    # Return the bias value    
+    def get_bias(self):
+        return self.bias
+    
+    # Set the bias value equal to b
+    def set_bias(b):
+        self.bias = b
     
     # Take image and a filter shape and return a feature map after convolving the image
     def convolve(self, img, fltr):
@@ -59,7 +68,7 @@ class convolution_layer:
         # applies relu to the feature map, and assigns the feature map to the feature 
         # maps matrix
         for i in range(self.num_filters):
-            feature_map = self.convolve(img,self.filters[i])
+            feature_map = self.convolve(img,self.filters[i]) + self.bias
             feature_map = self.relu(feature_map)
             feature_maps[i,:,:] = feature_map
         
