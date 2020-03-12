@@ -36,7 +36,7 @@ class convolution_layer:
         return self.filters
     
     # Set the filters in layer to new filters given
-    def set_filters(new_filters):
+    def set_filters(self, new_filters):
         self.filters = new_filters
         
     # Return the bias value    
@@ -44,7 +44,7 @@ class convolution_layer:
         return self.bias
     
     # Set the bias value equal to b
-    def set_bias(b):
+    def set_bias(self, b):
         self.bias = b
     
     # Return the output dimensions of the layer 
