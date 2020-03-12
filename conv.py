@@ -14,7 +14,7 @@ class convolution_layer:
         
         # Weights and biases
         self.filters = np.random.normal(size=(num_filters,kernel_size,kernel_size),scale=(2/(num_filters*kernel_size**2))) # Glorot initiaized, size num_filters of size (kernel_size x kernel_size)
-        self.bias = 0 # initializ bias to 0
+        self.bias = np.zeros((self.outdim[2])) # initializ bias to 0
         
         if testing: 
             #      Section for testing 0 and 90 sobel filters      # 3x3
@@ -76,17 +76,15 @@ class convolution_layer:
         # applies relu to the feature map, and assigns the feature map to the feature 
         # maps matrix
         if len(self.in_dim) > 2:
-            # feature maps handling
             for j in range(self.in_dim[2]):
                 im = img[:,:,j]
                 for i in range(self.num_filters):
-                    feature_map = self.convolve(im,self.filters[i]) + self.bias
+                    feature_map = self.convolve(im,self.filters[i]) + self.bias[i]
                     feature_map = self.relu(feature_map)
                     feature_maps[:,:,i] = feature_map
-        else:    
-            # Regular gray scale image handli ng
+        else:      
             for i in range(self.num_filters):
-                feature_map = self.convolve(img,self.filters[i]) + self.bias
+                feature_map = self.convolve(img,self.filters[i]) + self.bias[i]
                 feature_map = self.relu(feature_map)
                 feature_maps[:,:,i] = feature_map
         
