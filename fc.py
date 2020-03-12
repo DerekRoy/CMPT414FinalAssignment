@@ -21,6 +21,10 @@ class fully_connected_layer:
     # Set the bias terms
     def set_bias(self,b):
         self.bias = b
+    
+    # Return the output size
+    def out(self):
+        return self.nodes
         
     # Take in array x and output new array after x*weights + bias -> relu activation
     def feed_forward(self, x):
