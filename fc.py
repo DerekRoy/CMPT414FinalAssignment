@@ -27,11 +27,11 @@ class fully_connected_layer:
         return self.nodes
         
     # Take in array x and output new array after x*weights + bias -> relu activation
-    def feed_forward(self, x):
+    def feed_forward(self, x, train=False):
         # Initialize outputs
         output = np.zeros((self.nodes))
         
-        if self.drop_out:
+        if self.drop_out and train:
             rng = np.random.default_rng()
             drop = rng.choice(self.inpt, size=int(self.inpt*self.drop_out), replace=False)
             np.put(x,drop,0)
