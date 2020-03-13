@@ -38,11 +38,6 @@ class fully_connected_layer:
         
         # Calculate new node activation per value
         for i,w in enumerate(self.weights):
-            output[i] = self.relu(np.sum(x*w)+self.bias[i])
+            output[i] = np.sum(x*w)+self.bias[i]
         
         return output
-    
-    # Activation for the convolutional layer (Rectified Linear Unit) takes a feature map 
-    # and returns modified feature map: if pixel value < 0: pixel value = 0   
-    def relu(self, x):
-        return np.maximum(0,x)
