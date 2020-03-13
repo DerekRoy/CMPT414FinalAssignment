@@ -1,4 +1,4 @@
-# Activation (Rectified Linear Unit) and modifies so if value < 0: value = 0   
+# Activation (Rectified Linear Unit): if value < 0: value = 0   
     def relu(self, x):
         return np.maximum(0,x)
     
