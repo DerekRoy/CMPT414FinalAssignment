@@ -72,25 +72,18 @@ class convolution_layer:
         # Initializes feature maps matrix to hold new feature maps from convolution
         feature_maps = np.zeros(self.out_dim)
         
-        # Iterates through class filters and applies convolution to create a feature map,
-        # applies relu to the feature map, and assigns the feature map to the feature 
+        # Iterates through class filters and applies convolution to create a feature map
+        # and assigns the feature map to the feature 
         # maps matrix
         if len(self.in_dim) > 2:
             for j in range(self.in_dim[2]):
                 im = img[:,:,j]
                 for i in range(self.num_filters):
                     feature_map = self.convolve(im,self.filters[i]) + self.bias[i]
-                    feature_map = self.relu(feature_map)
                     feature_maps[:,:,i] = feature_map
         else:      
             for i in range(self.num_filters):
                 feature_map = self.convolve(img,self.filters[i]) + self.bias[i]
-                feature_map = self.relu(feature_map)
                 feature_maps[:,:,i] = feature_map
         
         return feature_maps  # feature maps in the shape of [number of filters, rows, columns]  
-    
-    # Activation for the convolutional layer (Rectified Linear Unit) takes a feature map 
-    # and returns modified feature map: if pixel value < 0: pixel value = 0   
-    def relu(self, feature_map):
-        return np.maximum(0,feature_map)
