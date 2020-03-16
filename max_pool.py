@@ -7,7 +7,7 @@ def max_pool1d_single(array, ksize, strides, debug=False):
     if not debug:
         dprint = lambda *args: None
 
-    rows, cols = array.shape
+    rows, cols, feature_maps = array.shape
 
     result_rows = max(1 + ceil((rows - ksize) / strides), 1)
     result_cols = max(1 + ceil((cols - ksize) / strides), 1)

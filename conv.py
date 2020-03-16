@@ -1,10 +1,12 @@
 # Sample usage 
 # c1 = convolution_layer(image.shape,2,3,True)
 # feature_maps = c1.conv(image)
+import numpy as np
 
 class convolution_layer:
     def __init__(self, inpt, num_filters, kernel_size, testing):
         self.in_dim = inpt
+        self.out_dim = None
 
         # Output shape
         if len(self.in_dim) > 2:
@@ -14,7 +16,7 @@ class convolution_layer:
         
         # Weights and biases
         self.filters = np.random.normal(size=(num_filters,kernel_size,kernel_size),scale=(2/(num_filters*kernel_size**2))) # Glorot initiaized, size num_filters of size (kernel_size x kernel_size)
-        self.bias = np.zeros((self.outdim[2])) # initializ bias to 0
+        self.bias = np.zeros((self.out_dim[2])) # initializ bias to 0
         
         if testing: 
             #      Section for testing 0 and 90 sobel filters      # 3x3

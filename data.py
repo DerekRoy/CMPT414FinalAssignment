@@ -1,12 +1,13 @@
 from scipy.io import loadmat
 from sklearn.model_selection import train_test_split
+import numpy as np
 
 def get_data():
-    # Load the data and split 
+    # Load the data and split
     mnist = loadmat("./mnist-original.mat")
     inputData, labels =  mnist["data"].T, mnist["label"][0]
 
-    # Restructure rows into 28 x 28 images 
+    # Restructure rows into 28 x 28 images
     X = np.array([digit.reshape(28,28) for digit in inputData])
 
     # One hot encode y labels
@@ -16,7 +17,7 @@ def get_data():
         temp_y[int(i)] = 1
         y.append(temp_y)
     y = np.array(y)
-    
+
     # Split into train test split and shuffle data
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
