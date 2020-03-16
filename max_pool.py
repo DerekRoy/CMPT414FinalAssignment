@@ -7,7 +7,7 @@ def max_pool1d_single(array, ksize, strides, debug=False):
     if not debug:
         dprint = lambda *args: None
 
-    rows, cols, feature_maps = array.shape
+    rows, cols = array.shape
 
     result_rows = max(1 + ceil((rows - ksize) / strides), 1)
     result_cols = max(1 + ceil((cols - ksize) / strides), 1)
@@ -46,10 +46,10 @@ def max_pool1d_single(array, ksize, strides, debug=False):
     return output
 
 
-def max_pool(input, ksize, strides):
+def max_pool(feature_maps, ksize, strides):
     output = []
 
-    for arr in input:
-        output.append(max_pool1d_single(arr, ksize=ksize, strides=strides))
+    for i in range(feature_maps.shape[2]):
+            output.append(max_pool1d_single(feature_maps[:,:,i], ksize=ksize, strides=strides))
 
     return output
