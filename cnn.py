@@ -7,12 +7,19 @@ from fc import fully_connected_layer
 
 class CNN:
     def __init(self,x):
+        # Convolutional layer 1 into maxpooling 1
         c1 = convolution_layer(x.shape,32,5)
         max1 = max_pool(c1.out(),2,2)
+        
+        # Convolutional layer 2 into maxpooling 2
         c2 = convolution_layer(max1.out(),64,3)
         max2 = max_pool(c2.out(),2,2)
+        
+        # Flatten output of max pool 2 into fully connected layer 1
         flat = flatten(max1.out())
         fc1 = fully_connected_layer(flat.out(),1024,.25)
+        
+        # Fully connected layer 1 to output layer
         out = fully_connected_layer(fc1.out(),2)
 
     def back_prop(self,outputs):
@@ -30,5 +37,5 @@ class CNN:
         # Fully connected layer one from flatten 
         fc1_out = relu(self.fc1.feed_forward(flat.flatten(max_pool_c2),train))
 
-        # Final output layer 
+        # Final output layer with softmax activation 
         return softmax(self.out.feed_forward(fc1_out))
