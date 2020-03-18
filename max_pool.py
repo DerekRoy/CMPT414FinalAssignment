@@ -2,6 +2,37 @@ import numpy as np
 from math import ceil
 
 
+class max_pool:
+    def __init__(self, input_shape, ksize, strides):
+        self.input_shape = input_shape
+        self.ksize = ksize
+        self.strides = strides
+
+        rows, cols, filters = input_shape
+
+        result_rows = max(1 + ceil((rows - ksize) / strides), 1)
+        result_cols = max(1 + ceil((cols - ksize) / strides), 1)
+        self.output_shape = (result_rows, result_cols, filters)
+
+    def out(self):
+        return self.output_shape
+
+    def max_pool(self, feature_maps):
+        output = []
+
+        for i in range(feature_maps.shape[2]):
+            output.append(max_pool1d_single(feature_maps[:, :, i], ksize=self.ksize, strides=self.strides))
+
+        shaped_output = np.empty(self.output_shape)
+
+        for filter in range(feature_maps.shape[2]):
+            for row in range(output[0].shape[0]):
+                for col in range(output[0].shape[1]):
+                    shaped_output[row, col, filter] = output[filter][row, col]
+
+        return shaped_output
+
+
 def max_pool1d_single(array, ksize, strides, debug=False):
     dprint = print
     if not debug:
@@ -44,19 +75,3 @@ def max_pool1d_single(array, ksize, strides, debug=False):
 
     dprint(output)
     return output
-
-
-def max_pool(feature_maps, ksize, strides):
-    output = []
-
-    for i in range(feature_maps.shape[2]):
-        output.append(max_pool1d_single(feature_maps[:,:,i], ksize=ksize, strides=strides))
-
-    shaped_output = np.empty((output[0].shape[0], output[0].shape[1], len(output)))
-
-    for filter in range(feature_maps.shape[2]):
-        for row in range(output[0].shape[0]):
-            for col in range(output[0].shape[1]):
-                shaped_output[row, col, filter] = output[filter][row, col]
-
-    return shaped_output

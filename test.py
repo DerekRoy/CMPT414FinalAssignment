@@ -159,10 +159,16 @@ class TestMaxPool(unittest.TestCase):
             ),
         ]
         for test_case in test_cases:
-            result = max_pool(np.array(test_case.input), test_case.ksize, test_case.strides)
+            mpool = max_pool(np.array(test_case.input).shape, test_case.ksize, test_case.strides)
+
+            result = mpool.max_pool(np.array(test_case.input))
             expected_result = np.array(test_case.expected_output)
 
+            # Make sure max pooling is correct
             self.assertTrue(np.array_equal(result, expected_result))
+
+            # Make sure .out() predicts output shape correctly
+            self.assertTrue(np.array_equal(mpool.out(), result.shape))
 
 
 if __name__ == '__main__':
