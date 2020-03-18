@@ -12,7 +12,7 @@ def max_pool1d_single(array, ksize, strides, debug=False):
     result_rows = max(1 + ceil((rows - ksize) / strides), 1)
     result_cols = max(1 + ceil((cols - ksize) / strides), 1)
 
-    output = np.array([[None] * result_cols for _ in range(result_rows)])
+    output = np.empty((result_rows, result_cols))
 
     curr_x, curr_y = 0, 0
 
