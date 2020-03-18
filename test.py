@@ -8,22 +8,6 @@ from collections import namedtuple
 
 
 class TestMaxPool(unittest.TestCase):
-    # arrays_to_test = [
-    #     [
-    #         [
-    #             [[0], [1], [2], [3]],
-    #             [[4], [5], [6], [7]],
-    #             [[8], [9], [10], [11]]
-    #         ],
-    #         [
-    #             [9, 10, 11],
-    #             [12, 13, 14],
-    #             [15, 16, 17]
-    #         ],
-    #     ]
-    # ]
-
-    arrays_to_test = []
 
     def test_flatten(self):
         TestCase = namedtuple('TestCase', 'input expected_output')
@@ -142,14 +126,43 @@ class TestMaxPool(unittest.TestCase):
             self.assertTrue(is_correct)
 
     def test_max_pool(self):
-        for arr in self.arrays_to_test:
-            arr = np.array(arr)
-            tf_result = tf.nn.max_pool1d(arr, 2, 1, 'VALID')
-            my_result = max_pool(arr, 2, 1)
+        TestCase = namedtuple('TestCase', 'input expected_output ksize strides')
 
-            print(tf_result)
-            print(my_result)
-            self.assertTrue(np.array_equal(tf_result, my_result))
+        test_cases = [
+            TestCase(
+                input=[
+                    [[0], [1], [2], [3]],
+                    [[4], [5], [6], [7]],
+                    [[8], [9], [10], [11]],
+                    [[12], [13], [14], [15]],
+                ],
+                expected_output=[
+                    [[5], [7]],
+                    [[13], [15]],
+                ],
+                ksize=2,
+                strides=2,
+            ),
+            TestCase(
+                input=[
+                    [[0, 15], [1, 14], [2, 13], [3, 12]],
+                    [[4, 11], [5, 10], [6, 9], [7, 8]],
+                    [[8, 7], [9, 6], [10, 5], [11, 4]],
+                    [[12, 3], [13, 2], [14, 1], [15, 0]],
+                ],
+                expected_output=[
+                    [[5, 15], [7, 13]],
+                    [[13, 7], [15, 5]],
+                ],
+                ksize=2,
+                strides=2,
+            ),
+        ]
+        for test_case in test_cases:
+            result = max_pool(np.array(test_case.input), test_case.ksize, test_case.strides)
+            expected_result = np.array(test_case.expected_output)
+
+            self.assertTrue(np.array_equal(result, expected_result))
 
 
 if __name__ == '__main__':
