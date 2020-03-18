@@ -50,6 +50,13 @@ def max_pool(feature_maps, ksize, strides):
     output = []
 
     for i in range(feature_maps.shape[2]):
-            output.append(max_pool1d_single(feature_maps[:,:,i], ksize=ksize, strides=strides))
+        output.append(max_pool1d_single(feature_maps[:,:,i], ksize=ksize, strides=strides))
 
-    return output
+    shaped_output = np.empty((output[0].shape[0], output[0].shape[1], len(output)))
+
+    for filter in range(feature_maps.shape[2]):
+        for row in range(output[0].shape[0]):
+            for col in range(output[0].shape[1]):
+                shaped_output[row, col, filter] = output[filter][row, col]
+
+    return shaped_output
