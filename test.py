@@ -34,11 +34,13 @@ class TestMaxPool(unittest.TestCase):
         for test_case in test_cases:
             is_correct = False
             try:
-                result = flatten(np.array(test_case.input))
+                flat = flatten(np.array(test_case.input).shape)
+
+                result = flat.flatten(np.array(test_case.input))
                 is_correct = np.array_equal(result, np.array(test_case.expected_output))
             finally:
                 if not is_correct:
-                    flatten(np.array(test_case.input), debug=True)
+                    flatten(np.array(test_case.input).shape).flatten(np.array(test_case.input), debug=True)
 
             self.assertTrue(is_correct)
 

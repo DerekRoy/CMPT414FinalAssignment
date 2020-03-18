@@ -5,23 +5,30 @@ def is_array(potential_array):
     return isinstance(potential_array, np.ndarray) or isinstance(potential_array, list)
 
 
-def flatten(array, debug=False):
-    if debug:
-        print("Flatten:", array)
+class flatten:
+    def __init__(self, input_shape):
+        self.output_shape = (np.prod(input_shape),)
 
-    if not is_array(array):
+    def out(self):
+        return self.output_shape
+
+    def flatten(self, array, debug=False):
         if debug:
-            print("Make array and return:", [array])
+            print("Flatten:", array)
 
-        return [array]
+        if not is_array(array):
+            if debug:
+                print("Make array and return:", [array])
 
-    output = []
+            return [array]
 
-    for element in array:
-        for nested_element in flatten(element, debug):
-            output.append(nested_element)
+        output = []
 
-    if debug:
-        print("flattened", array, "to", output)
+        for element in array:
+            for nested_element in self.flatten(element, debug):
+                output.append(nested_element)
 
-    return np.array(output)
+        if debug:
+            print("flattened", array, "to", output)
+
+        return np.array(output)
