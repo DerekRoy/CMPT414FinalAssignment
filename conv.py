@@ -4,19 +4,26 @@
 import numpy as np
 
 class convolution_layer:
-    def __init__(self, inpt, num_filters, kernel_size, testing):
+    def __init__(self, inpt, num_filters, kernel_size, stride, padding, testing=False):
         self.in_dim = inpt
         self.out_dim = None
-
+        self.offset = kernel_size - 1
+        self.stride = stride
+        self.padding = padding
+    
+        
+        # If padding True i.e: same set offset to 0
+        if padding:
+            self.offset = 0
+            
         # Output shape
         if len(self.in_dim) > 2:
-            self.out_dim = (self.in_dim[0]-kernel_size+1,self.in_dim[1]-kernel_size+1,self.in_dim[2]*num_filters)
+            self.out_dim = (int((self.in_dim[0]-self.offset)/self.stride),int((self.in_dim[1]-self.offset)/self.stride),self.in_dim[2]*num_filters)
         else:
-            self.out_dim = (self.in_dim[0]-kernel_size+1,self.in_dim[1]-kernel_size+1,num_filters)
+            self.out_dim = (int((self.in_dim[0]-self.offset)/self.stride),int((self.in_dim[1]-self.offset)/self.stride),num_filters)
         
-        # Weights and biases
+        # Weights
         self.filters = np.random.normal(size=(num_filters,kernel_size,kernel_size),scale=(2/(num_filters*kernel_size**2))) # Glorot initiaized, size num_filters of size (kernel_size x kernel_size)
-        self.bias = np.zeros((self.out_dim[2])) # initializ bias to 0
         
         if testing: 
             #      Section for testing 0 and 90 sobel filters      # 3x3
@@ -40,18 +47,6 @@ class convolution_layer:
     # Set the filters in layer to new filters given
     def set_filters(self, new_filters):
         self.filters = new_filters
-        
-    # Return the bias value    
-    def get_bias(self):
-        return self.bias
-    
-    # Set the bias value equal to b
-    def set_bias(self, b):
-        self.bias = b
-    
-    # Return the output dimensions of the layer 
-    def out(self):
-        return self.out_dim
     
     # Take image and a filter shape and return a feature map after convolving the image
     def convolve(self, img, fltr):
@@ -59,12 +54,18 @@ class convolution_layer:
         
         # Get image dimensions and set up a matrix to hold the feature map
         rows,columns = img.shape
-        feature_map = np.zeros((rows-2*displacement,columns-2*displacement))
+        
+        if self.padding:
+            feature_map = np.zeros((int(rows/self.stride),int(columns/self.stride)))
+            img = np.pad(img,((displacement, displacement), (displacement, displacement)),'constant', constant_values=(0))
+            rows,columns = img.shape
+        else:
+            feature_map = np.zeros((int((rows-2*displacement)/self.stride),int((columns-2*displacement)/self.stride)))
         
         # Convolve over image
-        for y in range(displacement,rows-displacement):
-            for x in range(displacement,columns-displacement):
-                feature_map[y-displacement,x-displacement] = img[y-displacement:y+displacement+1,x-displacement:x+displacement+1].ravel().dot(fltr.ravel())
+        for y in range(displacement,rows-displacement,self.stride):
+            for x in range(displacement,columns-displacement,self.stride):
+                feature_map[int((y-displacement)/self.stride),int((x-displacement)/self.stride)] = img[y-displacement:y+displacement+1,x-displacement:x+displacement+1].ravel().dot(fltr.ravel())
         
         return feature_map
     
@@ -81,11 +82,11 @@ class convolution_layer:
             for j in range(self.in_dim[2]):
                 im = img[:,:,j]
                 for i in range(self.num_filters):
-                    feature_map = self.convolve(im,self.filters[i]) + self.bias[i]
+                    feature_map = self.convolve(im,self.filters[i])
                     feature_maps[:,:,i] = feature_map
         else:      
             for i in range(self.num_filters):
-                feature_map = self.convolve(img,self.filters[i]) + self.bias[i]
+                feature_map = self.convolve(img,self.filters[i])
                 feature_maps[:,:,i] = feature_map
         
         return feature_maps  # feature maps in the shape of [number of filters, rows, columns]  
