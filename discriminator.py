@@ -1,3 +1,9 @@
+# Test run code:
+#     from data import get_data
+#     image = get_data()[0][0]
+#     d = discriminator(image)
+#     d.run(image)
+
 from conv import convolution_layer 
 from activations import leaky_relu,sigmoid
 from flatten import flatten
