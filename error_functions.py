@@ -10,4 +10,4 @@ def rmse(t,y)
 
 # Sum squared error function
 def sum_sqaured_error(t,y):
-    return np.sum(np.power((t-y),2))
+    return .5*np.sum(np.power((t-y),2))
