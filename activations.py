@@ -27,3 +27,7 @@ def sigmoid(x):
 # Derivative of sigmoid in regards to output
 def sigmoid_backprop(out):
     return out*(1-out)
+
+# Soft max to transform last fully connected layer in network 
+def softmax(logits):
+    return np.exp(logits)/np.sum(np.exp(logits), axis=0)
