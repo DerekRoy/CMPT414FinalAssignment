@@ -32,3 +32,8 @@ def sigmoid_backprop(out):
 def softmax(logits):
     exps = np.exp(logits - logits.max())
     return exps / np.sum(exps)
+
+# Softmax derivative for back propogation
+def softmax_backprop(softmax):
+    s = softmax.reshape(-1,1)
+    return np.diagflat(s) - np.dot(s, s.T)
