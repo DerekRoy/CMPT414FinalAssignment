@@ -30,4 +30,5 @@ def sigmoid_backprop(out):
 
 # Soft max to transform last fully connected layer in network 
 def softmax(logits):
-    return np.exp(logits)/np.sum(np.exp(logits), axis=0)
+    exps = np.exp(logits - logits.max())
+    return exps / np.sum(exps)
