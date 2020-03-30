@@ -5,7 +5,7 @@
 #     d.run(image)
 
 from conv import convolution_layer 
-from activations import leaky_relu,sigmoid
+from activations import leaky_relu,softmax
 from flatten import flatten
 from fc import fully_connected_layer
 
@@ -22,4 +22,4 @@ class discriminator:
         c2_out = c2.conv(c1_relu)
         c2_relu = leaky_relu(c2_out)
         flattened = flat.flatten(c2_relu)
-        return sigmoid(dense.feed_forward(flattened))
+        return softmax(dense.feed_forward(flattened))
