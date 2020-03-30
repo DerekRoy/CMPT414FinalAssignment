@@ -14,7 +14,7 @@ class discriminator:
         c1 = convolution_layer(image.shape,64,5,2,True)
         c2 = convolution_layer(c1.out_dim,128,5,2,True)
         flat = flatten(c2.out_dim)
-        dense = fully_connected_layer(flat.output_shape[0],1)
+        dense = fully_connected_layer(flat.output_shape[0],10)
     
     def run(self,image):
         c1_out = c1.conv(image)
