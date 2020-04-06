@@ -3,6 +3,7 @@ import tensorflow as tf
 import numpy as np
 from max_pool import max_pool, max_pool1d_single
 from flatten import flatten
+from fc import fully_connected_layer
 
 from collections import namedtuple
 
@@ -173,5 +174,46 @@ class TestMaxPool(unittest.TestCase):
             self.assertTrue(np.array_equal(mpool.out(), result.shape))
 
 
+def test_fc_or():
+    TrainData = namedtuple('TrainData', 'inputs expected_output')
+
+    test_data = [
+        TrainData(
+            inputs=[[0], [0]],
+            expected_output=[0, 0]
+        ),
+        TrainData(
+            inputs=[[0], [1]],
+            expected_output=[0, 1]
+        ),
+        TrainData(
+            inputs=[[1], [0]],
+            expected_output=[0, 1]
+        ),
+        TrainData(
+            inputs=[[1], [1]],
+            expected_output=[1, 1]
+        )
+    ]
+
+    fc = fully_connected_layer(2, 2)
+
+    epochs = 1000
+    for i in range(epochs):
+        if i % 100 == 0:
+            print(('%.1f' % (i * 100 / epochs)) + '% done')
+
+        for data in test_data:
+            output, _ = fc.feed_forward(np.array(data.inputs))
+
+            if i == epochs - 1:
+                print('---------')
+                print('Input: ', data.inputs)
+                print('AND: %.3f' % output[0])
+                print('OR: %.3f' % output[1])
+
+            fc.back_prop(np.array(data.expected_output), output)
+
 if __name__ == '__main__':
-    unittest.main()
+    # unittest.main()
+    test_fc_or()

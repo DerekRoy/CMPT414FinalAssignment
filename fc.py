@@ -1,10 +1,18 @@
 import numpy as np
+from activations import sigmoid_backprop, sigmoid
+
+R = 0.1
 
 class fully_connected_layer:
     def __init__(self, inpt, nodes, dropout=0):
         self.inpt = inpt
         self.nodes = nodes
         self.weights = np.random.normal(size=(nodes,inpt),scale=(2/(nodes*inpt)))
+        self.biases = np.random.normal(size=(nodes, 1),scale=(2/(nodes*inpt)))
+
+        self.cache_x = None
+        self.cache_output = None
+
         self.drop_out = dropout
     
     # Return the weights matrix
@@ -18,19 +26,22 @@ class fully_connected_layer:
     # Return the output size
     def out(self):
         return self.nodes
-        
-    # Take in array x and output new array after x*weights -> activation
-    def feed_forward(self, x, train=False):
-        # Initialize outputs
-        output = np.zeros((self.nodes))
-        
-        if self.drop_out and train:
-            rng = np.random.default_rng()
-            drop = rng.choice(self.inpt, size=int(self.inpt*self.drop_out), replace=False)
-            np.put(x,drop,0)
-        
-        # Calculate new node activation per value
-        for i,w in enumerate(self.weights):
-            output[i] = np.sum(x*w)
-        
-        return output
+
+    def feed_forward(self, x):
+        output = np.dot(self.weights, x) + self.biases
+
+        self.cache_x = x
+        self.cache_output = output
+
+        return sigmoid(output), output
+
+    def back_prop(self, desired_output, actual_output):
+        desired_output = desired_output.reshape(actual_output.shape)
+        dX = -(np.divide(desired_output, actual_output) - np.divide(1 - desired_output, 1 - actual_output))
+
+        delta_output = sigmoid_backprop(dX, self.cache_output)
+        delta_weights = np.dot(delta_output, self.cache_x.T) / self.cache_x.shape[1]
+        delta_biases = np.sum(delta_output, axis=1, keepdims=True) / self.cache_x.shape[1]
+
+        self.weights -= R * delta_weights
+        self.biases -= R * delta_biases
