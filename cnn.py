@@ -42,7 +42,7 @@ class CNN:
         self.flattened = self.flat.flatten(self.c2_activation)
         
         # Out Layer 
-        self.logits = self.dense.feed_forward(flattened)
+        self.logits = self.dense.feed_forward(self.flattened)[0]
         self.output = softmax(self.logits)
         
         return self.output
@@ -168,9 +168,22 @@ class CNN:
     def load_model(self,name="weights"):
         with open(name, 'rb') as f:
             weights = pickle.load(f)
-        
+
         # Set all the weights from the pickle file
         self.c1.set_filters(weights['c1_weights'])
         self.c2.set_filters(weights['c2_weights'])
         self.dense.set_weights(weights['dense_weights'])
         print("Model Loaded")
+
+    def back_prop(self, desired_output):
+        fc_grad = self.dense.back_prop(desired_output, self.output)
+
+        fc_grad = fc_grad.reshape(self.c2.out_dim)
+
+        fc_grad = leaky_relu_backprop(fc_grad)
+
+        c2_grad = self.c2.back_prop(fc_grad)
+
+        c2_grad = leaky_relu_backprop(c2_grad)
+
+        self.c1.back_prop(c2_grad)
