@@ -83,7 +83,7 @@ class convolution_layer:
                 im = img[:,:,j]
                 for i in range(self.num_filters):
                     feature_map = self.convolve(im,self.filters[i])
-                    feature_maps[:,:,i] = feature_map
+                    feature_maps[:,:,j+self.num_filters+i] = feature_map
         else:      
             for i in range(self.num_filters):
                 feature_map = self.convolve(img,self.filters[i])
