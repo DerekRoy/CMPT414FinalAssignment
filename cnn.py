@@ -8,7 +8,7 @@ from conv import convolution_layer
 from activations import leaky_relu,softmax,leaky_relu_backprop
 from flatten import flatten
 from fc import fully_connected_layer
-from error_functions import backprop_cross_entropy
+from error_functions import backprop_cross_entropy, cross_entropy
 import numpy as np
 import pickle
 
@@ -93,7 +93,7 @@ class CNN:
                     accuracy.append(0)
 
                 # Do Back Propogation
-            #     self.backprop(y_train[i],prediction)
+                self.back_prop(y_train[i])
             
             last_percentage = 0
             print("\n\tPercent finished in validation {}%".format(last_percentage), end = ' ')
