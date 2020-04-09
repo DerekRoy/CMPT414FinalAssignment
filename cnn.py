@@ -47,6 +47,10 @@ class CNN:
         
         return self.output
     
+    # Run prediction 
+    def predict(self,image):
+        return self.feed_forward(image)
+    
     # Save the model weights to a pickle file
     def save_model(self, name="weights"):
         # Put weights into dictionary to be saved
