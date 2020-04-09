@@ -3,6 +3,8 @@
 # feature_maps = c1.conv(image)
 import numpy as np
 
+R = 0.1
+
 class convolution_layer:
     def __init__(self, inpt, num_filters, kernel_size, stride, padding, testing=False):
         self.in_dim = inpt
@@ -10,8 +12,12 @@ class convolution_layer:
         self.offset = kernel_size - 1
         self.stride = stride
         self.padding = padding
-    
-        
+        self.kernel_size = kernel_size
+
+        self.cache_img = None
+        self.cache_feature_maps = None
+
+
         # If padding True i.e: same set offset to 0
         if padding:
             self.offset = 0
@@ -24,8 +30,12 @@ class convolution_layer:
         
         # Weights
         self.filters = np.random.normal(size=(num_filters,kernel_size,kernel_size),scale=(2/(num_filters*kernel_size**2))) # Glorot initiaized, size num_filters of size (kernel_size x kernel_size)
-        
-        if testing: 
+
+        # Biases
+        self.biases = np.zeros((num_filters, 1))
+        # self.biases = np.random.normal(size=(num_filters, 1),scale=(2/(num_filters*kernel_size**2))) # Glorot initiaized, size num_filters of size (kernel_size x kernel_size)
+
+        if testing:
             #      Section for testing 0 and 90 sobel filters      # 3x3
             if kernel_size == 3:
                 self.filters[0] = np.array([[-1,0,1],[-1,0,1],[-1,0,1]])
@@ -83,10 +93,53 @@ class convolution_layer:
                 im = img[:,:,j]
                 for i in range(self.num_filters):
                     feature_map = self.convolve(im,self.filters[i])
-                    feature_maps[:,:,j+self.num_filters+i] = feature_map
-        else:      
+                    feature_maps[:, :, j * self.num_filters + i] = feature_map
+        else:
             for i in range(self.num_filters):
                 feature_map = self.convolve(img,self.filters[i])
                 feature_maps[:,:,i] = feature_map
-        
-        return feature_maps  # feature maps in the shape of [number of filters, rows, columns]  
+
+        self.cache_img = img
+        self.cache_feature_maps = feature_maps
+
+        return feature_maps  # feature maps in the shape of [number of filters, rows, columns]
+
+    def back_prop(self, in_grad):
+        delta_filters = np.zeros(self.filters.shape)
+        delta_biases = np.zeros(self.biases.shape)
+
+        displacement = int(self.filters[0].shape[0] / 2) # calculation of difference in image and kernel size
+
+        rows, columns = self.cache_img.shape[0], self.cache_img.shape[1]
+
+        out_grad = np.zeros(self.cache_img.shape)
+
+        if len(self.in_dim) > 2:
+            for j in range(self.in_dim[2]):
+                im = self.cache_img[:,:,j]
+                for i in range(self.num_filters):
+                    for y in range(displacement, rows-displacement, self.stride):
+                        for x in range(displacement, columns-displacement, self.stride):
+                            image_part = im[y-displacement:y+displacement+1,x-displacement:x+displacement+1]
+                            left_side = in_grad[int((y-displacement)/self.stride), int((x-displacement)/self.stride), j * self.num_filters + i]
+                            delta_filters[i] = image_part * left_side
+
+                            out_grad[y-displacement:y+displacement+1, x-displacement:x+displacement+1, j] = left_side * self.filters[i]
+
+                    delta_biases += in_grad[:, :, j * self.num_filters + i].sum()
+        else:
+            for i in range(self.num_filters):
+                for y in range(displacement, rows-displacement, self.stride):
+                    for x in range(displacement, columns-displacement, self.stride):
+                        image_part = self.cache_img[y-displacement:y+displacement+1,x-displacement:x+displacement+1]
+                        left_side = in_grad[int((y-displacement)/self.stride), int((x-displacement)/self.stride), i]
+                        delta_filters[i] = image_part * left_side
+
+                        out_grad[y-displacement:y+displacement+1, x-displacement:x+displacement+1] = left_side * self.filters[i]
+
+                delta_biases += in_grad[:, :, i].sum()
+
+        self.filters -= R * delta_filters
+        self.biases -= R * delta_biases
+
+        return out_grad
