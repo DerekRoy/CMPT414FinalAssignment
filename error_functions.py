@@ -9,7 +9,7 @@ def backprop_cross_entropy(t,y):
     return -t/y
 
 # Root mean square error function 
-def rmse(t,y)
+def rmse(t,y):
     return np.sqrt(sum_sqaured_error(y,t)/len(t))
 
 # Sum squared error function
