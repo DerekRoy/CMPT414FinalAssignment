@@ -1,5 +1,5 @@
 import numpy as np
-from activations import sigmoid_backprop, sigmoid
+from activations import sigmoid_backprop, sigmoid, softmax
 
 R = 0.1
 
@@ -41,7 +41,7 @@ class fully_connected_layer:
         self.cache_x = x
         self.cache_output = output
 
-        return output
+        return softmax(output)
 
     def back_prop(self, desired_output, actual_output):
         desired_output = desired_output.reshape(actual_output.shape)

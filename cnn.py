@@ -29,8 +29,7 @@ class CNN:
         self.flattened = self.flat.flatten(self.c1_activation)
 
         # Out Layer
-        self.logits = self.dense.feed_forward(self.flattened)
-        self.output = softmax(self.logits)
+        self.output = self.dense.feed_forward(self.flattened)
 
         return self.output
 
