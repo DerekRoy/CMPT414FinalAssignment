@@ -7,28 +7,10 @@ def is_array(potential_array):
 
 class flatten:
     def __init__(self, input_shape):
-        self.output_shape = (np.prod(input_shape),)
+        self.output_shape = (np.prod(input_shape), 1)
 
     def out(self):
         return self.output_shape
 
-    def flatten(self, array, debug=False):
-        if debug:
-            print("Flatten:", array)
-
-        if not is_array(array):
-            if debug:
-                print("Make array and return:", [array])
-
-            return [array]
-
-        output = []
-
-        for element in array:
-            for nested_element in self.flatten(element, debug):
-                output.append(nested_element)
-
-        if debug:
-            print("flattened", array, "to", output)
-
-        return np.array(output)
+    def flatten(self, array):
+        return array.reshape(self.output_shape)
