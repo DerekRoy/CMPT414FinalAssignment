@@ -42,6 +42,9 @@ class fully_connected_layer:
         delta_output = sigmoid_backprop(dX, self.cache_output)
         delta_weights = np.dot(delta_output, self.cache_x.T) / self.cache_x.shape[1]
         delta_biases = np.sum(delta_output, axis=1, keepdims=True) / self.cache_x.shape[1]
+        grad = np.dot(delta_weights.T, delta_output)
 
         self.weights -= R * delta_weights
         self.biases -= R * delta_biases
+
+        return grad
