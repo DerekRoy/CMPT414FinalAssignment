@@ -47,8 +47,8 @@ class fully_connected_layer:
         desired_output = desired_output.reshape(actual_output.shape)
 
         delta_output = actual_output - desired_output
-        delta_weights = np.dot(delta_output, self.cache_x.T) / self.cache_x.shape[1]
-        delta_biases = np.sum(delta_output, axis=1, keepdims=True) / self.cache_x.shape[1]
+        delta_weights = np.dot(delta_output, self.cache_x.T)
+        delta_biases = delta_output
         grad = np.dot(delta_weights.T, delta_output)
 
         self.weights -= R * delta_weights
