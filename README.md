@@ -9,7 +9,7 @@ The following libraries are required for this code:
 - sklearn
 - scipy 
 
-Running the command: `pip3 install numpy sklearn scipy` or `pip install numpy sklearn scipy` depending on how your system is configured
+Running the command: `pip3 install numpy sklearn scipy` or `pip install numpy sklearn scipy` (depending on how your system is configured) will install the libraries.
 
 Library Versions used on testing:
 - scikit-learn==0.22.2.post1
