@@ -26,9 +26,8 @@ Library Versions used on testing:
 
 
 
-This CNN has Model load, Model save, Train, Test, and Predict functionality, however for the sake of our executable and python script we will only support prediction with our pretrained model. 
-
-To use the project either run the executable or the "(prediction python script)": 
+This CNN has Model load, Model save, Train, Test, and Predict functionality, however for the sake of our executable we will only support prediction with our pretrained model. 
+ 
 
 ## Execution
 ### Use CNN directly
