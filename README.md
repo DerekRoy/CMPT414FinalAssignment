@@ -21,6 +21,8 @@ Library Versions used on testing:
 - scikit-learn==0.22.2.post1
 - scipy==1.4.1
 - numpy==1.18.1
+- Pillow==6.1.0
+- Kivy==1.11.1
 
 
 
