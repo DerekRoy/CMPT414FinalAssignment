@@ -4,6 +4,8 @@ This model was trained and built on the MNIST Dataset. MNIST Data can be found a
 
 This code was written in Python 3 and should support 3.6 or 3.7
 
+
+
 The following libraries are required for this code: 
 - numpy
 - sklearn
@@ -11,12 +13,16 @@ The following libraries are required for this code:
 
 Running the command: `pip3 install numpy sklearn scipy` or `pip install numpy sklearn scipy` (depending on how your system is configured) will install the libraries.
 
+
+
 Library Versions used on testing:
 - scikit-learn==0.22.2.post1
 - scipy==1.4.1
 - numpy==1.18.1
 
-This CNN has Model load, Model save, Train, Test, and Predict functionality, however for the sake of our executable we will only support prediction with our pretrained model. 
+
+
+This CNN has Model load, Model save, Train, Test, and Predict functionality, however for the sake of our executable and python script we will only support prediction with our pretrained model. 
 
 To use the project either run the executable or the "(prediction python script)": 
 
