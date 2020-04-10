@@ -10,8 +10,10 @@ The following libraries are required for this code:
 - numpy
 - sklearn
 - scipy 
+- Pillow
+- kivy
 
-Running the command: `pip3 install numpy sklearn scipy` or `pip install numpy sklearn scipy` (depending on how your system is configured) will install the libraries.
+Running the command: `pip3 install numpy sklearn scipy Pillow kivy` or `pip install numpy sklearn scipy Pillow kivy` (depending on how your system is configured) will install the libraries.
 
 
 
