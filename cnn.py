@@ -13,6 +13,7 @@ import numpy as np
 import pickle
 from sklearn.model_selection import train_test_split
 from error_functions import cross_entropy
+import time
 
 class CNN:
     def __init__(self,image):
@@ -38,81 +39,24 @@ class CNN:
         return self.output
 
     # Train the model with training data
-    def train(self,X_train,y_train,epochs=10):
-        # Run through each epoch
-        for e in range(epochs):
-            print("Epoch {}/{}".format(e+1,epochs))
+    def train(self, X_train, y_train, epochs=10, images_limit=100_000):
+        X_train = X_train[:images_limit]
+        y_train = y_train[:images_limit]
 
-            # Random Shuffle on data and split to create train and validation set
-            X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2)
+        start_time = time.time()
 
-            # Place holders for loss, accuracy, and validation loss and accuracy per epoch
-            loss = []
-            accuracy = []
-            val_loss = []
-            val_accuracy = []
+        for epoch in range(epochs):
+            for i in range(len(X_train)):
+                percentage_done = (epoch * len(X_train) + i) / (epochs * len(X_train))
+                time_taken = time.time() - start_time
+                estimated_time_left = time_taken / percentage_done - time_taken if percentage_done != 0 else float('inf')
 
-            # Metrics to update progress of model
-            num_images = X_train.shape[0]
-            last_percentage = 0
-            print("\tPercent finished in training {}%".format(last_percentage), end = ' ')
+                print('%.1f' % (percentage_done * 100) + '% done. ' + 'Time left: %.0f sec' % estimated_time_left)
 
-            # Train the model
-            for i,image in enumerate(X_train):
-                print("\t {}/{}".format(i,num_images))
-                # Get percent done with epoch
-#                 percent_done = int(i/num_images*100)
-#                 if percent_done%10 == 0 and last_percentage != percent_done:
-#                     print("{}%".format(percent_done), end = ' ')
-#                     last_percentage = percent_done
-
-                # Predict number
-                prediction = self.feed_forward(image)
-
-                # Add loss to epoch loss
-                loss.append(cross_entropy(y_train[i],prediction))
-
-                # Get number of correct predictions and wrong predictions
-                if np.argmax(y_train[i]) == np.argmax(prediction):
-                    accuracy.append(1)
-                else:
-                    accuracy.append(0)
-
-                # Do Back Propogation
-            #     self.backprop(y_train[i],prediction)
-
-            last_percentage = 0
-            print("\n\tPercent finished in validation {}%".format(last_percentage), end = ' ')
-
-            # Get validation
-            for i,image in enumerate(X_val):
-                print("\t {}/{}".format(i,num_images))
-#                 # Get percent done with epoch
-#                 percent_done = int(i/num_images*100)
-#                 if percent_done%10 == 0 and last_percentage != percent_done:
-#                     print("{}%".format(percent_done), end = ' ')
-#                     last_percentage = percent_done
-
-                # Predict Number
-                prediction = self.feed_forward(image)
-
-                # Add loss to val loss
-                val_loss.append(cross_entropy(y_val[i],prediction))
-
-                # Get number of correct predictions and wrong predictions
-                if np.argmax(y_val[i]) == np.argmax(prediction):
-                    val_accuracy.append(1)
-                else:
-                    val_accuracy.append(0)
-
-            # Get averages over epochs
-            loss = np.mean(loss)
-            accuracy = np.mean(accuracy)
-            val_loss = np.mean(val_loss)
-            val_accuracy = np.mean(val_accuracy)
-
-            # Print out preformance
-            print("\ttrain loss: {} train accuracy: {} \n\tvalidation loss: {} validation accuracy: {}\n".format(loss,accuracy,val_loss,val_accuracy))
+                image = X_train[i]
+                label = y_train[i]
+                self.feed_forward(image)
+                self.back_prop(label)
 
     # Test the accuracy of model with test set
     def test(self,X_test,y_test):
