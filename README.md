@@ -75,8 +75,3 @@ python3 draw.py
 It will display a window where you can draw using your mouse, and will display the result in the console.
 
 Video demo: https://youtu.be/olITdJCMPgc
-
-//// Executable instructions here
-
-//// Python script instructions here 
-
