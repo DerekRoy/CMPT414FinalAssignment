@@ -45,9 +45,8 @@ class fully_connected_layer:
 
     def back_prop(self, desired_output, actual_output):
         desired_output = desired_output.reshape(actual_output.shape)
-        dX = -(np.divide(desired_output, actual_output) - np.divide(1 - desired_output, 1 - actual_output))
 
-        delta_output = sigmoid_backprop(dX, self.cache_output)
+        delta_output = actual_output - desired_output
         delta_weights = np.dot(delta_output, self.cache_x.T) / self.cache_x.shape[1]
         delta_biases = np.sum(delta_output, axis=1, keepdims=True) / self.cache_x.shape[1]
         grad = np.dot(delta_weights.T, delta_output)
