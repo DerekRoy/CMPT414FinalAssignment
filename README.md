@@ -28,6 +28,52 @@ This CNN has Model load, Model save, Train, Test, and Predict functionality, how
 
 To use the project either run the executable or the "(prediction python script)": 
 
+## Execution
+### Use CNN directly
+First, get training and testing images:
+```python
+from data import get_data
+
+X_train, X_test, Y_train, Y_test = get_data()
+```
+
+Then, initialize CNN, passing one of the images such that the CNN knows what dimensions to expect
+```python
+from cnn import CNN
+
+nn = CNN(X_train[0])
+```
+
+Train the CNN, configuring number of epochs and number of images to train on:
+```python
+nn.train(X_train, Y_train, epochs=10, images_limit=100)
+# Inside .train(), it uses .feed_forward() and .back_prop() methods
+```
+
+Get the prediction on a single image like so:
+```python
+nn.feed_forward(X_test[0])
+```
+
+Save the model:
+```python
+nn.save_model('file_name')
+```
+
+Load a model:
+```python
+nn.load_model('file_name')
+```
+### Drawing by Hand
+To test the CNN on your own hand-drawn images, launch this script:
+```bash
+python3 draw.py
+```
+
+It will display a window where you can draw using your mouse, and will display the result in the console.
+
+Video demo: https://youtu.be/olITdJCMPgc
+
 //// Executable instructions here
 
 //// Python script instructions here 
