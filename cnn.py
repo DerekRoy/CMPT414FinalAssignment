@@ -16,8 +16,9 @@ from error_functions import cross_entropy
 
 class CNN:
     def __init__(self,image):
-        self.c1 = convolution_layer(image.shape,64,5,2,True)
-        self.flat = flatten(self.c1.out_dim)
+        self.c1 = convolution_layer(image.shape,8,5,2,True)
+        self.c2 = convolution_layer(self.c1.out_dim, 8, 5, 2, True)
+        self.flat = flatten(self.c2.out_dim)
         self.dense = fully_connected_layer(self.flat.output_shape[0],10)
 
     def feed_forward(self,image):
@@ -25,8 +26,11 @@ class CNN:
         self.c1_out = self.c1.conv(image)
         self.c1_activation = leaky_relu(self.c1_out)
 
+        self.c2_out = self.c2.conv(self.c1_activation)
+        self.c2_activation = leaky_relu(self.c2_out)
+
         # Flatten out
-        self.flattened = self.flat.flatten(self.c1_activation)
+        self.flattened = self.flat.flatten(self.c2_activation)
 
         # Out Layer
         self.output = self.dense.feed_forward(self.flattened)
@@ -142,7 +146,11 @@ class CNN:
 
 
     def save_model(self, name="weights"):
-        weights = {"c1_weights":self.c1.get_filters(),"dense_weights":self.dense.get_weights(),"dense_bias":self.dense.get_bias()}
+        weights = {
+            "c1_weights":self.c1.get_filters(),
+            "c2_weights":self.c2.get_filters(),
+            "dense_weights":self.dense.get_weights(),
+            "dense_bias":self.dense.get_bias()}
         with open(name, 'wb') as pickle_file:
             pickle.dump(weights, pickle_file)
         print("Model Saved")
@@ -151,6 +159,7 @@ class CNN:
         with open(name, 'rb') as f:
             weights = pickle.load(f)
         self.c1.set_filters(weights['c1_weights'])
+        self.c2.set_filters(weights['c2_weights'])
         self.dense.set_weights(weights['dense_weights'])
         self.dense.set_bias(weights['dense_bias'])
         print("Model Loaded")

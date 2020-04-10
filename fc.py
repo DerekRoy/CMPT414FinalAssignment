@@ -36,7 +36,7 @@ class fully_connected_layer:
         return self.nodes
 
     def feed_forward(self, x):
-        output = np.dot(x,self.weights) + self.biases
+        output = np.dot(self.weights, x) + self.biases
 
         self.cache_x = x
         self.cache_output = output

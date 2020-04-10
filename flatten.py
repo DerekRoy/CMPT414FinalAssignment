@@ -7,7 +7,7 @@ def is_array(potential_array):
 
 class flatten:
     def __init__(self, input_shape):
-        self.output_shape = (np.prod(input_shape), )
+        self.output_shape = (np.prod(input_shape), 1)
 
     def out(self):
         return self.output_shape
