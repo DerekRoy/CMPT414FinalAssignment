@@ -6,10 +6,10 @@ This code was written in Python 3 and should support 3.6 or 3.7
 
 
 
-The following libraries are required for this code: 
+The following libraries are required for this code:
 - numpy
 - sklearn
-- scipy 
+- scipy
 - Pillow
 - kivy
 
@@ -26,8 +26,8 @@ Library Versions used on testing:
 
 
 
-This CNN has Model load, Model save, Train, Test, and Predict functionality, however for the sake of our executable we will only support prediction with our pretrained model. 
- 
+This CNN has Model load, Model save, Train, Test, and Predict functionality, however for the sake of our executable we will only support prediction with our pretrained model.
+
 
 ## Execution
 ### Use CNN directly
@@ -73,4 +73,6 @@ python3 draw.py
 
 It will display a window where you can draw using your mouse, and will display the result in the console.
 
-Video demo: https://youtu.be/olITdJCMPgc
+Video demo1: https://youtu.be/olITdJCMPgc
+
+Video demo2: https://www.youtube.com/watch?v=cbMFD8mnaoI

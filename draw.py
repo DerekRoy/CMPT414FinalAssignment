@@ -3,18 +3,26 @@ from PIL import Image
 from kivy.uix.widget import Widget
 from kivy.graphics import Color, Ellipse, Line, Fbo
 from kivy.config import Config
-from data import get_data
 import numpy as np
 import cnn
+import sys
+import os
 Config.set('graphics','resizable',0)
 
 from kivy.core.window import Window
 
 Window.size = (100, 100)
 
-image = get_data()[0][0]
+image = np.zeros((28,28))
 c = cnn.CNN(image)
-c.load_model('8x8filters50kimages')
+
+file = ""
+if getattr(sys, 'frozen', False):
+    file=os.path.join(sys._MEIPASS, "8x8filters50kimages")
+else:
+    file="8x8filters50kimages"
+
+c.load_model(file)
 
 
 
